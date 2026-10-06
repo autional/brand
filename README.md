@@ -34,10 +34,10 @@
 
 ```bash
 pnpm install
-pnpm --filter @autional-cn/brand-portal dev      # http://localhost:13120
-pnpm --filter @autional-cn/brand-portal typecheck
-pnpm --filter @autional-cn/brand-portal test
-pnpm --filter @autional-cn/brand-portal build
+pnpm --filter @autional/brand-portal dev      # http://localhost:13120
+pnpm --filter @autional/brand-portal typecheck
+pnpm --filter @autional/brand-portal test
+pnpm --filter @autional/brand-portal build
 ```
 
 本地接口代理指向 `localhost:11080`（网关）与 `localhost:11001`（tenant-service），见 `apps/brand-portal/vite.config.ts`。

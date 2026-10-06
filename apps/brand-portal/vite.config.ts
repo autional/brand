@@ -22,7 +22,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['@autional-cn/shared', '@autional-cn/ui', '@autional-cn/tailwind-preset'],
+    include: ['@autional/shared', '@autional/ui', '@autional/tailwind-preset'],
   },
   server: {
     port: 13120,

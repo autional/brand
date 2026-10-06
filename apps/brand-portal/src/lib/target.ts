@@ -8,7 +8,7 @@
  * 白名单 = 门户表展开的 origin 集合 ⇒ 各门户 URL 天然合法，无需额外登记。
  */
 
-import { getPortalUrl, isValidRedirect } from '@autional-cn/shared';
+import { getPortalUrl, isValidRedirect } from '@autional/shared';
 
 /** auth 门户裸根（缺省目标）—— 选定 slug 后落到 <slug>/dashboard */
 function defaultTarget(): string {

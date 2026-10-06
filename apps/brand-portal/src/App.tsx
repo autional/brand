@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AlertCircle, Inbox, Loader2, Search, X } from 'lucide-react';
-import { getPortalUrl } from '@autional-cn/shared';
-import { ThemeProvider, ThemeToggle } from '@autional-cn/ui';
+import { getPortalUrl } from '@autional/shared';
+import { ThemeProvider, ThemeToggle } from '@autional/ui';
 import { I18nProvider, useI18n } from '@/lib/i18n';
 import {
 	MIN_SEARCH_CHARS,

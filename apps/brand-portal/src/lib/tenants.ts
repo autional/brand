@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { apiClient, extractList } from '@autional-cn/shared';
+import { apiClient, extractList } from '@autional/shared';
 import {
 	tenantPublicTenants,
 	tenantPublicTenantsByTenants,
-} from '@autional-cn/shared/generated/api';
+} from '@autional/shared/generated/api';
 import { extractBrandingFields } from './branding';
 import { createLimiter } from './concurrency';
 

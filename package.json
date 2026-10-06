@@ -1,16 +1,16 @@
 {
-  "name": "@autional-cn/brand",
+  "name": "@autional/brand",
   "version": "0.1.0",
   "private": true,
   "description": "Autional Brand Portal — tenant/brand selection gateway (brand.autional.cn)",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @autional-cn/brand-portal dev",
-    "build": "pnpm --filter @autional-cn/brand-portal... build",
-    "preview": "pnpm --filter @autional-cn/brand-portal preview",
-    "typecheck": "pnpm --filter @autional-cn/brand-portal typecheck",
-    "lint": "pnpm --filter @autional-cn/brand-portal lint",
-    "test": "pnpm --filter @autional-cn/brand-portal test"
+    "dev": "pnpm --filter @autional/brand-portal dev",
+    "build": "pnpm --filter @autional/brand-portal... build",
+    "preview": "pnpm --filter @autional/brand-portal preview",
+    "typecheck": "pnpm --filter @autional/brand-portal typecheck",
+    "lint": "pnpm --filter @autional/brand-portal lint",
+    "test": "pnpm --filter @autional/brand-portal test"
   },
   "packageManager": "pnpm@11.0.8",
   "engines": {
