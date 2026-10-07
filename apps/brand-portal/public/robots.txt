@@ -1,3 +1,3 @@
-# brand.autional.cn — 租户品牌选择入口（公开免登录，单页）。收录首页即可，无需 sitemap。
+# brand.autional.com — 租户品牌选择入口（公开免登录，单页）。收录首页即可，无需 sitemap。
 User-agent: *
 Allow: /
