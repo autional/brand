@@ -79,7 +79,7 @@ export function SearchResults({
 	// 空结果
 	if (items.length === 0) {
 		return (
-			<p className="py-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
+			<p className="py-12 text-center text-sm text-neutral-500 dark:text-[var(--color-text-muted)]">
 				{t('search.noResult')}
 			</p>
 		);
@@ -90,7 +90,7 @@ export function SearchResults({
 			<p
 				role="status"
 				aria-live="polite"
-				className="mb-3 text-sm text-neutral-500 dark:text-neutral-400"
+				className="mb-3 text-sm text-neutral-500 dark:text-[var(--color-text-muted)]"
 			>
 				{isFetching && items.length === 0
 					? t('search.searching')
@@ -123,7 +123,7 @@ export function SearchResults({
 										</span>
 									</span>
 									<ArrowRight
-										className="h-4 w-4 shrink-0 text-neutral-400 transition duration-200 group-hover:translate-x-0.5 group-hover:text-primary-700 dark:group-hover:text-sky-300"
+										className="h-4 w-4 shrink-0 text-[var(--color-text-muted)] transition duration-200 group-hover:translate-x-0.5 group-hover:text-primary-700 dark:group-hover:text-sky-300"
 										aria-hidden="true"
 									/>
 								</a>
@@ -149,7 +149,7 @@ export function SearchResults({
 					</button>
 				</div>
 			) : total > 0 ? (
-				<p className="mt-6 text-center text-xs text-neutral-500 dark:text-neutral-400">
+				<p className="mt-6 text-center text-xs text-neutral-500 dark:text-[var(--color-text-muted)]">
 					{t('search.endOfResults', { total })}
 				</p>
 			) : null}

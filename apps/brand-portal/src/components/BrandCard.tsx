@@ -68,7 +68,7 @@ export function BrandCard({ tenant, href, enterLabel, fallbackTag, onNavigate }:
 				</div>
 
 				<ArrowRight
-					className="mt-1 h-5 w-5 shrink-0 text-neutral-400 transition duration-200 group-hover:translate-x-1 group-hover:text-primary-700 dark:group-hover:text-sky-300"
+					className="mt-1 h-5 w-5 shrink-0 text-[var(--color-text-muted)] transition duration-200 group-hover:translate-x-1 group-hover:text-primary-700 dark:group-hover:text-sky-300"
 					aria-hidden="true"
 				/>
 			</div>

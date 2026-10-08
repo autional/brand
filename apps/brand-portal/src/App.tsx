@@ -76,7 +76,7 @@ function SiteFooter() {
 	];
 	return (
 		<footer className="mt-16 border-t border-primary-100 dark:border-white/10">
-			<div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-8 text-xs text-neutral-500 sm:flex-row sm:px-6 dark:text-neutral-400">
+			<div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-8 text-xs text-neutral-500 sm:flex-row sm:px-6 dark:text-[var(--color-text-muted)]">
 				<p>© {new Date().getFullYear()} Autional</p>
 				<nav className="flex items-center gap-5">
 					{links.map((l) => (
@@ -97,7 +97,7 @@ function SiteFooter() {
 /** 加载块（精选首载 / 单租户跳转中共用，零新样式） */
 function LoadingBlock({ label }: { label: string }) {
 	return (
-		<div className="flex flex-col items-center gap-3 py-16 text-neutral-500 dark:text-neutral-400">
+		<div className="flex flex-col items-center gap-3 py-16 text-neutral-500 dark:text-[var(--color-text-muted)]">
 			<Loader2 className="h-6 w-6 animate-spin text-primary-600 dark:text-sky-300" aria-hidden="true" />
 			<p className="text-sm">{label}</p>
 		</div>
@@ -180,7 +180,7 @@ function BrandPortal() {
 					<div className="mx-auto mb-10 max-w-xl">
 						<div className="relative">
 							<Search
-								className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400"
+								className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]"
 								aria-hidden="true"
 							/>
 							<input
@@ -190,21 +190,21 @@ function BrandPortal() {
 								onChange={(e) => setKeyword(e.target.value)}
 								placeholder={t('search.placeholder')}
 								aria-label={t('search.placeholder')}
-								className="w-full rounded-full border border-primary-200 bg-white/90 py-3.5 pl-11 pr-12 text-base text-primary-900 shadow-soft outline-none transition duration-150 placeholder:text-neutral-400 focus:border-primary-400 focus:ring-2 focus:ring-primary-200 sm:text-sm dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:border-sky-400"
+								className="w-full rounded-full border border-primary-200 bg-white/90 py-3.5 pl-11 pr-12 text-base text-primary-900 shadow-soft outline-none transition duration-150 placeholder:text-[var(--color-text-muted)] focus:border-primary-400 focus:ring-2 focus:ring-primary-200 sm:text-sm dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:border-sky-400"
 							/>
 							{keyword !== '' ? (
 								<button
 									type="button"
 									onClick={clearSearch}
 									aria-label={t('search.clear')}
-									className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-neutral-400 transition duration-150 hover:bg-sky-50 hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:hover:bg-white/10 dark:hover:text-sky-300"
+									className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[var(--color-text-muted)] transition duration-150 hover:bg-sky-50 hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:hover:bg-white/10 dark:hover:text-sky-300"
 								>
 									<X className="h-4 w-4" aria-hidden="true" />
 								</button>
 							) : null}
 						</div>
 						{trimmed !== '' && trimmed.length < MIN_SEARCH_CHARS ? (
-							<p className="mt-3 text-center text-xs text-neutral-500 dark:text-neutral-400">
+							<p className="mt-3 text-center text-xs text-neutral-500 dark:text-[var(--color-text-muted)]">
 								{t('search.minChars', { min: MIN_SEARCH_CHARS })}
 							</p>
 						) : null}
