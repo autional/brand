@@ -5,8 +5,8 @@
   "description": "Brand Portal - Tenant/brand selection gateway (Vite + React)",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 13120",
-    "build": "vite build",
+    "dev": "node ../../scripts/gen-env.mjs && vite --port 13120",
+    "build": "node ../../scripts/gen-env.mjs && vite build",
     "preview": "vite preview --port 13120",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
