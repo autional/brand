@@ -1,6 +1,10 @@
 {
   "meta": {
-    "title": "Autional Brand Portal"
+    "title": "Autional Brand Portal",
+    "description": "Autional Brand Portal — choose your organization and continue to its sign-in page."
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content"
   },
   "header": {
     "brand": "Autional",
@@ -33,8 +37,7 @@
     "recent": "Recently visited"
   },
   "card": {
-    "enter": "Enter",
-    "fallbackTag": "Organization"
+    "enter": "Enter"
   },
   "state": {
     "loading": "Loading organizations…",

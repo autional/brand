@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AlertCircle, Inbox, Loader2, Search, X } from 'lucide-react';
 import { getPortalUrl } from '@autional/shared';
-import { ThemeProvider, ThemeToggle } from '@autional/ui';
+import { ThemeProvider, ThemeToggle, Input } from '@autional/ui';
 import { I18nProvider, useI18n } from '@/lib/i18n';
 import {
 	MIN_SEARCH_CHARS,
@@ -30,7 +30,7 @@ function LangSwitch() {
 			type="button"
 			onClick={() => setLang(lang === 'zh-CN' ? 'en-US' : 'zh-CN')}
 			aria-label={t('header.langLabel')}
-			className="brand-button-secondary !px-4 !py-2 !text-xs"
+			className="brand-button-secondary min-h-[var(--a11y-touch-target)] shrink-0 whitespace-nowrap !px-4 !py-2 !text-xs"
 		>
 			{lang === 'zh-CN' ? 'EN' : '中文'}
 		</button>
@@ -48,14 +48,14 @@ function SiteHeader() {
 						<p className="text-sm font-semibold text-primary-900 dark:text-white">
 							{t('header.brand')}
 						</p>
-						<p className="text-xs text-neutral-500 dark:text-sky-200">
+						<p className="text-xs text-[var(--color-text-muted)] dark:text-sky-200">
 							{t('header.tagline')}
 						</p>
 					</div>
 				</div>
 				<div className="flex items-center gap-2">
 					<ThemeToggle
-						className="brand-button-secondary !px-3 !py-2"
+						className="brand-button-secondary min-h-[var(--a11y-touch-target)] shrink-0 !px-3 !py-2"
 						iconSize={16}
 						labelLight={t('theme.switchToLight')}
 						labelDark={t('theme.switchToDark')}
@@ -76,14 +76,14 @@ function SiteFooter() {
 	];
 	return (
 		<footer className="mt-16 border-t border-primary-100 dark:border-white/10">
-			<div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-8 text-xs text-neutral-500 sm:flex-row sm:px-6 dark:text-[var(--color-text-muted)]">
+			<div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-8 text-xs text-[var(--color-text-muted)] sm:flex-row sm:px-6">
 				<p>© {new Date().getFullYear()} Autional</p>
 				<nav className="flex items-center gap-5">
 					{links.map((l) => (
 						<a
 							key={l.label}
 							href={l.href}
-							className="transition hover:text-primary-700 dark:hover:text-sky-300"
+							className="inline-flex min-h-[var(--a11y-touch-target)] items-center transition hover:text-primary-700 dark:hover:text-sky-300"
 						>
 							{l.label}
 						</a>
@@ -94,10 +94,22 @@ function SiteFooter() {
 	);
 }
 
+function SkipLink() {
+	const { t } = useI18n();
+	return (
+		<a
+			href="#main-content"
+			className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary-600 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
+		>
+			{t('a11y.skipToContent')}
+		</a>
+	);
+}
+
 /** 加载块（精选首载 / 单租户跳转中共用，零新样式） */
 function LoadingBlock({ label }: { label: string }) {
 	return (
-		<div className="flex flex-col items-center gap-3 py-16 text-neutral-500 dark:text-[var(--color-text-muted)]">
+		<div className="flex flex-col items-center gap-3 py-16 text-[var(--color-text-muted)]">
 			<Loader2 className="h-6 w-6 animate-spin text-primary-600 dark:text-sky-300" aria-hidden="true" />
 			<p className="text-sm">{label}</p>
 		</div>
@@ -164,47 +176,49 @@ function BrandPortal() {
 		<div className="relative min-h-screen">
 			<div className="brand-grid pointer-events-none absolute inset-x-0 top-0 h-72 opacity-60" aria-hidden="true" />
 			<div className="relative flex min-h-screen flex-col">
+				<SkipLink />
 				<SiteHeader />
 
-				<main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+				<main
+					id="main-content"
+					className="mx-auto w-full max-w-6xl flex-1 px-4 pb-16 pt-10 sm:px-6 sm:pt-12"
+				>
 					<div className="mb-8 text-center">
 						<span className="brand-kicker">{t('hero.kicker')}</span>
 						<h1 className="mt-5 text-3xl font-bold tracking-tight text-primary-900 sm:text-4xl dark:text-white">
 							{t('hero.title')}
 						</h1>
-						<p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-neutral-600 sm:text-base dark:text-neutral-300">
+						<p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[var(--color-text-muted)] sm:text-base">
 							{t('hero.subtitle')}
 						</p>
 					</div>
 
 					<div className="mx-auto mb-10 max-w-xl">
-						<div className="relative">
-							<Search
-								className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]"
-								aria-hidden="true"
-							/>
-							<input
-								ref={inputRef}
-								type="search"
-								value={keyword}
-								onChange={(e) => setKeyword(e.target.value)}
-								placeholder={t('search.placeholder')}
-								aria-label={t('search.placeholder')}
-								className="w-full rounded-full border border-primary-200 bg-white/90 py-3.5 pl-11 pr-12 text-base text-primary-900 shadow-soft outline-none transition duration-150 placeholder:text-[var(--color-text-muted)] focus:border-primary-400 focus:ring-2 focus:ring-primary-200 sm:text-sm dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:border-sky-400"
-							/>
-							{keyword !== '' ? (
+						{/* 大圆角搜索框走设计系统的 Input（第 61 轮）：size="lg" + shape="pill"，
+							图标与清除按钮走 prefix/suffix 槽 —— 原来是 absolute 图标 + 算出来的 pl-11/pr-12。 */}
+						<Input
+							ref={inputRef}
+							type="search"
+							size="lg"
+							shape="pill"
+							value={keyword}
+							onChange={(e) => setKeyword(e.target.value)}
+							placeholder={t('search.placeholder')}
+							aria-label={t('search.placeholder')}
+							prefix={<Search size={16} aria-hidden="true" />}
+							suffix={keyword !== '' ? (
 								<button
 									type="button"
 									onClick={clearSearch}
 									aria-label={t('search.clear')}
-									className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[var(--color-text-muted)] transition duration-150 hover:bg-sky-50 hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:hover:bg-white/10 dark:hover:text-sky-300"
-								>
-									<X className="h-4 w-4" aria-hidden="true" />
-								</button>
-							) : null}
-						</div>
+									className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-text-muted)] transition duration-150 hover:bg-sky-50 hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:hover:bg-white/10 dark:hover:text-sky-300"
+									>
+										<X size={16} aria-hidden="true" />
+									</button>
+							) : undefined}
+						/>
 						{trimmed !== '' && trimmed.length < MIN_SEARCH_CHARS ? (
-							<p className="mt-3 text-center text-xs text-neutral-500 dark:text-[var(--color-text-muted)]">
+							<p className="mt-3 text-center text-xs text-[var(--color-text-muted)]">
 								{t('search.minChars', { min: MIN_SEARCH_CHARS })}
 							</p>
 						) : null}
@@ -279,7 +293,6 @@ function BrandPortal() {
 										tenants={featured}
 										hrefFor={hrefFor}
 										enterLabel={t('card.enter')}
-										fallbackTag={t('card.fallbackTag')}
 										onNavigate={recordRecent}
 									/>
 								)}

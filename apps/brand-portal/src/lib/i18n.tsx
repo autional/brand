@@ -14,16 +14,24 @@ function syncDocumentTitle(title: string) {
 	if (title) document.title = title;
 }
 
+function syncDocumentMetaDescription(description: string) {
+	if (description) {
+		document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+	}
+}
+
 export function I18nProvider({ children }: { children: React.ReactNode }) {
 	const { i18n } = useTranslation();
 
 	useEffect(() => {
 		syncHtmlLang(i18n.language);
 		syncDocumentTitle(i18n.t('meta.title'));
+		syncDocumentMetaDescription(i18n.t('meta.description'));
 
 		const onLanguageChanged = (lng: string) => {
 			syncHtmlLang(lng);
 			syncDocumentTitle(i18n.t('meta.title'));
+			syncDocumentMetaDescription(i18n.t('meta.description'));
 		};
 		i18n.on('languageChanged', onLanguageChanged);
 
