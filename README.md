@@ -1,19 +1,22 @@
 # Autional Brand Portal
 
-`https://brand.autional.cn` —— 租户品牌选择入口站。
+**域名**：[brand.autional.cn](https://brand.autional.cn)（cn）· [brand.autional.com](https://brand.autional.com)（com）
+**技术栈**：Vite + React 19 + TypeScript + Tailwind CSS
+
+租户品牌选择入口站。
 
 ## 定位
 
-受租户隔离的门户（`user` / `security` / `admin` / `authenticator` / `auth`）**必须有租户段**：`<门户>.autional.cn/<tenantSlug>/`。
+受租户隔离的门户（`user` / `security` / `admin` / `authenticator` / `auth`）**必须有租户段**：`<门户>.<域>/<tenantSlug>/`。
 裸根无会话时统一落到本站，选定品牌后再进入目标门户的登录页：
 
 ```
-<门户>.autional.cn/                      裸根，无会话
-  └─> brand.autional.cn/?redirect=https://<门户>.autional.cn/
+<门户>.<域>/                         裸根，无会话
+  └─> brand.<域>/?redirect=https://<门户>.<域>/
         └─(选品牌 acme)
-           └─> auth.autional.cn/acme/login?redirect=https://<门户>.autional.cn/acme/
+           └─> auth.<域>/acme/login?redirect=https://<门户>.<域>/acme/
                  └─(登录)
-                    └─> <门户>.autional.cn/acme/
+                    └─> <门户>.<域>/acme/
 ```
 
 三条旁路（避免多余摩擦）：
@@ -21,8 +24,8 @@
 | 场景 | 行为 |
 |---|---|
 | 门户裸根，已有会话 | 解析出 slug → `/<slug>/` 直达，**不经过本站** |
-| 深链已带 slug（`<门户>/acme/`）无会话 | 租户已知 → 直接 `auth.autional.cn/acme/login` |
-| `auth.autional.cn/` 裸根 | 有会话 → `/<slug>/dashboard`；无会话 → 本站 |
+| 深链已带 slug（`<门户>/acme/`）无会话 | 租户已知 → 直接 `auth.<域>/acme/login` |
+| `auth.<域>/` 裸根 | 有会话 → `/<slug>/dashboard`；无会话 → 本站 |
 
 ## 与其它站的关系
 
@@ -34,14 +37,26 @@
 
 ```bash
 pnpm install
-pnpm --filter @autional/brand-portal dev      # http://localhost:13120
-pnpm --filter @autional/brand-portal typecheck
-pnpm --filter @autional/brand-portal test
-pnpm --filter @autional/brand-portal build
+pnpm dev      # http://localhost:13120（构建前自动生成 env.js/robots.txt）
+pnpm build    # 构建产物：apps/brand-portal/dist/
+pnpm test     # Vitest 单元测试
 ```
 
 本地接口代理指向 `localhost:11080`（网关）与 `localhost:11001`（tenant-service），见 `apps/brand-portal/vite.config.ts`。
 
-## 部署
+## 部署（单源双区）
 
-Vercel 项目 `cn-brand`，关联本仓；域 `brand.autional.cn`（DNSPod 逐子域 CNAME，禁通配符）。push `main` 自动重建。
+`main` → `brand`（com）自动部署；`main` → `cn-brand`（cn）自动部署。两区**同一份源**，
+区域差异全部由 Vercel 项目环境变量在构建期注入（见 `docs/positioning/24`）：
+
+| 变量 | com | cn |
+| --- | --- | --- |
+| `REGION` | `com` | `cn` |
+| `SITE_URL` | `https://brand.autional.com` | `https://brand.autional.cn` |
+| `DEFAULT_LANG` / `FALLBACK_LANG` | `en` | `zh` |
+| `API_ORIGIN` | `https://api.autional.com` | `https://api.autional.cn` |
+| `CDN_HOST` | `https://cdn.autional.com` | `https://cdn.autional.cn` |
+
+- 路由/重写：`vercel.ts`（fail-closed：`API_ORIGIN` 缺失即构建失败）。
+- 生成物（勿手改、勿入库）：`apps/brand-portal/public/{env.js,robots.txt}` ← `scripts/gen-env.mjs`；区域文案在 `scripts/region-copy.mjs`。
+- 本地无 env 时兜底 cn 值（与迁移前基线一致）。
