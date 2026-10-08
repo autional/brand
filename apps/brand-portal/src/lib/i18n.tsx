@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import '@/i18n/config';
+import { DEFAULT_LANG, FALLBACK_LANG, localeOf } from '@/lib/site-env';
 
 type Lang = 'zh-CN' | 'en-US';
 
-export const defaultLang: Lang = 'zh-CN';
+export const defaultLang: Lang = localeOf(DEFAULT_LANG);
 
 function syncHtmlLang(lng: string) {
-	document.documentElement.lang = lng === 'en-US' ? 'en' : 'zh-CN';
+	document.documentElement.lang = lng || localeOf(FALLBACK_LANG);
 }
 
 function syncDocumentTitle(title: string) {
