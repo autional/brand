@@ -11,7 +11,7 @@ export const REGION_COPY = {
     description: 'Autional 品牌入口 —— 选择你的组织，进入对应的门户。',
     ogTitle: 'Autional 品牌入口',
     ogDescription: 'Autional 品牌入口 —— 选择你的组织，进入对应的门户。',
-    robotsComment: '租户品牌选择入口（公开免登录，单页）。收录首页即可，无需 sitemap。',
+    robotsComment: '租户品牌选择入口（公开免登录，单页）。不用 Disallow：保持可抓取，搜索引擎才能读到 index.html 里的 robots noindex。',
   },
   en: {
     locale: 'en-US',
@@ -21,6 +21,6 @@ export const REGION_COPY = {
     description: 'Autional Brand Portal — choose your organization and continue to its portal.',
     ogTitle: 'Autional Brand Portal',
     ogDescription: 'Autional Brand Portal — choose your organization and continue to its portal.',
-    robotsComment: 'tenant brand-selection gateway (public, single page); homepage indexing only, no sitemap.',
+    robotsComment: 'tenant brand-selection gateway (public, single page). No Disallow: stay crawlable so search engines can read the robots noindex meta in index.html.',
   },
 };
