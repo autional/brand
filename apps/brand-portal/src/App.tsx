@@ -32,6 +32,7 @@ function LangSwitch() {
 			aria-label={t('header.langLabel')}
 			className="brand-button-secondary min-h-[var(--a11y-touch-target)] shrink-0 whitespace-nowrap !px-4 !py-2 !text-xs"
 		>
+			{/* i18n-exempt: 语言切换钮目标语言本名（endonym），不随当前语言翻译 */}
 			{lang === 'zh-CN' ? 'EN' : '中文'}
 		</button>
 	);
