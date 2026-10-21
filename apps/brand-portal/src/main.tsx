@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { isRetryableError } from '@autional/shared';
 import App from './App';
 import './app/globals.css';
+import { setupPwaLifecycle } from './lib/pwa-lifecycle';
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -11,6 +12,8 @@ const queryClient = new QueryClient({
 		queries: { retry: (failureCount, error) => isRetryableError(error) && failureCount < 1, staleTime: 30000 },
 	},
 });
+
+setupPwaLifecycle();
 
 const root = document.getElementById('root');
 if (root) {

@@ -60,3 +60,11 @@ pnpm test     # Vitest 单元测试
 - 路由/重写：`vercel.ts`（fail-closed：`API_ORIGIN` 缺失即构建失败）。
 - 生成物（勿手改、勿入库）：`apps/brand-portal/public/{env.js,robots.txt}` ← `scripts/gen-env.mjs`；区域文案在 `scripts/region-copy.mjs`。
 - 本地无 env 时兜底 cn 值（与迁移前基线一致）。
+
+## PWA
+
+- **外壳缓存**：`vite-plugin-pwa` injectManifest + Workbox precache；manifest 按区域在构建期生成，图标来自站点自身。
+- **数据面永不缓存**：`/bff`、`/api/v1`、`/tenant`、`/oauth` 走 `NetworkOnly`；在线导航先网络（4s 超时），离线才回退预缓存 `index.html`。
+- **更新**：新 SW `skipWaiting` + `clients.claim` 立即接管；`src/lib/pwa-lifecycle.ts` 在接管后整页重载一次。首访、未提交输入、60 秒防循环不重载；`vite:preloadError` 最多重载一次。
+- **部署注意**：`vercel.ts` 对 `/sw.js`、`/index.html`、`/manifest.webmanifest`、`/registerSW.js` 设 `max-age=0`；`/assets/*`、`/workbox-*.js` 长缓存。SPA 兜底只在 `Accept: text/html` 时生效，缺失的静态资源返回 404。
+- **验收**：SW 受控、Cache Storage 只有 Workbox precache、租户接口不在缓存、离线可开壳但不展示缓存的租户数据。
