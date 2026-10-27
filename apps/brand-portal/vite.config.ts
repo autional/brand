@@ -36,6 +36,7 @@ function regionPlugin(): Plugin {
     OG_IMAGE: `${ROOT_URL}/og-default.png`,
     SITE_URL: buildEnv.siteUrl,
     ROOT_URL,
+    CDN_ORIGIN: buildEnv.cdnHost,
     CDN_ASSET_BASE,
   };
   return {
@@ -127,8 +128,12 @@ export default defineConfig({
       injectManifest: {
         // index.html 是离线壳，必须进预缓存；env.js 已内联进页面，不再作为独立缓存项。
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
-        globIgnores: ['**/env.js', '**/android-chrome-*.png'],
+        // 安装图标（android-chrome-*/apple-touch-icon）不参与离线壳，浏览器只在「添加到主屏」时取，
+        // 预缓存它们等于每次安装白下约 190KB。includeManifestIcons:false 关掉插件对 manifest.icons
+        // 的强制注入（它绕过 globIgnores），globIgnores 再兜住 public/ 里的同名文件。
+        globIgnores: ['**/env.js', '**/android-chrome-*.png', '**/apple-touch-icon.png'],
       },
+      includeManifestIcons: false,
       devOptions: {
         enabled: false,
       },
