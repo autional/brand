@@ -5,6 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import { readFileSync } from 'node:fs';
 import path from 'path';
 import { CDN_PIN, readBuildEnv } from '../../scripts/env.mjs';
+import { cdnHeadPlugin } from '../../scripts/vite-cdn.mjs';
 import { REGION_COPY } from '../../scripts/region-copy.mjs';
 
 const buildEnv = readBuildEnv();
@@ -36,8 +37,6 @@ function regionPlugin(): Plugin {
     OG_IMAGE: `${ROOT_URL}/og-default.png`,
     SITE_URL: buildEnv.siteUrl,
     ROOT_URL,
-    CDN_ORIGIN: buildEnv.cdnHost,
-    AUTH_ORIGIN: `https://auth.${buildEnv.rootDomain}`,
     CDN_ASSET_BASE,
   };
   return {
@@ -91,6 +90,11 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    // 首屏预热：CDN（阻塞 CSS）+ 下一跳 auth（所有卡片都整页跳过去）
+    cdnHeadPlugin({
+      cdnHost: buildEnv.cdnHost,
+      extraOrigins: [`https://auth.${buildEnv.rootDomain}`],
+    }),
     inlineEnvPlugin(),
     regionPlugin(),
     VitePWA({
