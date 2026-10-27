@@ -283,6 +283,7 @@ export function useTenantBrandings(slugs: string[]) {
 		staleTime: TTL,
 		gcTime: TTL * 2,
 		enabled: key.length > 0,
-		retry: 1,
+		// retry 策略由 main.tsx 的 QueryClient 默认（isRetryableError）单点决定；
+		// 此处不得写 per-query 覆盖（会把 4xx 也纳入重试，见 2026-10-14 事故）。
 	});
 }
