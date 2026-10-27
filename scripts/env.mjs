@@ -63,12 +63,16 @@ export function readBuildEnv(env = process.env) {
    * 默认 cn→direct（.cn 已有香港直连入口）、com→proxy（api.autional.com 本身就在 Vercel 边上，
    * 直连无收益且多一次预检）。显式 `FRONTEND_API_MODE=direct|proxy` 可覆盖，用于灰度与回滚。
    */
+  // 预览部署（VERCEL_ENV=preview）默认 proxy：预览域是 *.vercel.app，不在网关静态白名单，
+  // 走 direct 会从"未登记 Origin"发起预检并被浏览器拒绝；同源 /bff 无 CORS 面。
   const apiMode =
     env.FRONTEND_API_MODE === 'direct' || env.FRONTEND_API_MODE === 'proxy'
       ? env.FRONTEND_API_MODE
-      : region === 'cn'
-        ? 'direct'
-        : 'proxy';
+      : env.VERCEL_ENV === 'preview'
+        ? 'proxy'
+        : region === 'cn'
+          ? 'direct'
+          : 'proxy';
   const apiOrigin = (env.API_ORIGIN || '').replace(/\/+$/, '');
   if (apiMode === 'direct' && !apiOrigin) {
     throw new Error(
