@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { pickOnColor } from '@/lib/brand-color';
+import { prefetchDocument } from '@/lib/prefetch';
 import { EMPTY_BRANDING, useTenantBranding, type TenantBase } from '@/lib/tenants';
 
 interface BrandCardProps {
@@ -25,6 +26,8 @@ export function BrandCard({ tenant, href, enterLabel, onNavigate }: BrandCardPro
 		<a
 			href={href}
 			onClick={() => onNavigate?.(tenant)}
+			onPointerEnter={() => prefetchDocument(href)}
+			onFocus={() => prefetchDocument(href)}
 			aria-label={`${enterLabel} ${tenant.displayName}`}
 			className="brand-card group relative flex flex-col overflow-hidden transition duration-200 hover:-translate-y-1 hover:border-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
 			style={accent ? ({ '--card-accent': accent } as React.CSSProperties) : undefined}

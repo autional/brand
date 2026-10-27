@@ -1,4 +1,5 @@
 import { useI18n } from '@/lib/i18n';
+import { prefetchDocument } from '@/lib/prefetch';
 import type { RecentTenant, TenantBase } from '@/lib/tenants';
 
 interface RecentTenantsProps {
@@ -28,6 +29,8 @@ export function RecentTenants({ recent, hrefFor, onNavigate }: RecentTenantsProp
 							key={r.slug}
 							href={hrefFor(tenant)}
 							onClick={() => onNavigate(tenant)}
+							onPointerEnter={() => prefetchDocument(hrefFor(tenant))}
+							onFocus={() => prefetchDocument(hrefFor(tenant))}
 							className="group inline-flex min-h-[44px] items-center gap-2 rounded-full border border-primary-100 bg-white/90 py-1.5 pl-1.5 pr-4 shadow-soft transition duration-150 hover:border-primary-300 hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
 						>
 							<span

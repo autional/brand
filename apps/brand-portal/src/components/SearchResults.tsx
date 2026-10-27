@@ -1,5 +1,6 @@
 import { AlertCircle, ArrowRight, Loader2 } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
+import { prefetchDocument } from '@/lib/prefetch';
 import type { TenantBase } from '@/lib/tenants';
 import { EmptyState } from './EmptyState';
 
@@ -106,6 +107,8 @@ export function SearchResults({
 								<a
 									href={hrefFor(r)}
 									onClick={() => onNavigate(r)}
+									onPointerEnter={() => prefetchDocument(hrefFor(r))}
+									onFocus={() => prefetchDocument(hrefFor(r))}
 									className="group flex min-h-[56px] items-center gap-3 px-4 py-2.5 transition duration-150 hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500 dark:hover:bg-white/5"
 								>
 									<span
