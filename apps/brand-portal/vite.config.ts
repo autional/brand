@@ -37,6 +37,7 @@ function regionPlugin(): Plugin {
     SITE_URL: buildEnv.siteUrl,
     ROOT_URL,
     CDN_ORIGIN: buildEnv.cdnHost,
+    AUTH_ORIGIN: `https://auth.${buildEnv.rootDomain}`,
     CDN_ASSET_BASE,
   };
   return {
