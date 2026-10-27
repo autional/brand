@@ -7,7 +7,7 @@ import { routes, type Rewrite, type VercelConfig } from '@vercel/config/v1';
  * （cn 项目 = https://api.autional.cn，com 项目 = https://api.autional.com）。
  * 未设置时 **故意抛错**（fail-closed），避免静默产出坏路由。
  *
- * rewrites 承接原 vercel.json 全集（/bff、/api/v1、/oauth、/tenant）。SPA 兜底只在
+ * rewrites 承接原 vercel.json 全集（/bff、/api/v1、/oauth）。SPA 兜底只在
  * Accept 含 text/html 时生效——缺失的 `/assets/*.js` 返回 404，不会被兜底成 200 的 index.html。
  */
 const rawOrigin = process.env.API_ORIGIN;
@@ -48,7 +48,6 @@ export const config: VercelConfig = {
     routes.rewrite('/bff/:path*', `${ORIGIN}/bff/:path*`),
     routes.rewrite('/api/v1/:path*', `${ORIGIN}/api/v1/:path*`),
     routes.rewrite('/oauth/:path*', `${ORIGIN}/oauth/:path*`),
-    routes.rewrite('/tenant/:path*', `${ORIGIN}/tenant/:path*`),
     spaFallback,
   ],
 };
