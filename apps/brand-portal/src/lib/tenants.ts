@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { apiClient, extractList } from '@autional/shared';
 import {
@@ -206,7 +206,7 @@ async function fetchBrandingSafe(slug: string): Promise<TenantBranding> {
 	}
 }
 
-export function useTenantBranding(slug: string) {
+export function useTenantBranding(slug: string, options: { enabled?: boolean } = {}) {
 	const cacheKey = `${BRANDING_PREFIX}${slug}`;
 	return useQuery<TenantBranding>({
 		queryKey: ['tenant-branding', slug],
@@ -217,7 +217,72 @@ export function useTenantBranding(slug: string) {
 		},
 		staleTime: TTL,
 		gcTime: TTL * 2,
-		enabled: Boolean(slug),
+		// 批量接口已给出品牌时（enabled:false）不再逐卡请求；批量失败才退回这里。
+		enabled: Boolean(slug) && options.enabled !== false,
 		placeholderData: () => readCache<TenantBranding>(cacheKey) ?? undefined,
+	});
+}
+
+// ─── 批量品牌（首屏一次请求；服务端支持 featured=true 与 slugs=a,b,c 并集） ───
+
+/** 与服务端 publicBrandingMaxSlugs 对齐 */
+const BRANDING_BATCH_MAX = 50;
+const BRANDING_BATCH_PATH = '/tenant/api/v1/tenant/public/tenants/branding';
+
+/** 批量入参规范化：去空、去重、排序（保证同一集合命中同一查询键）、截断到服务端上限。 */
+export function normalizeBrandingSlugs(slugs: string[]): string[] {
+	return Array.from(new Set(slugs.filter(Boolean)))
+		.sort()
+		.slice(0, BRANDING_BATCH_MAX);
+}
+
+interface RawBranding {
+	slug?: string;
+	name?: string;
+	logo_url?: string;
+	logoUrl?: string;
+	primary_color?: string;
+	primaryColor?: string;
+	secondary_color?: string;
+	secondaryColor?: string;
+	company_name?: string;
+	companyName?: string;
+}
+
+/** 后端 snake_case / 中间层 camelCase 两种键都兜（与列表解析口径一致）。 */
+export function mapBranding(raw: RawBranding): TenantBranding {
+	return {
+		logoUrl: raw.logo_url || raw.logoUrl || '',
+		primaryColor: raw.primary_color || raw.primaryColor || '',
+		secondaryColor: raw.secondary_color || raw.secondaryColor || '',
+		companyName: raw.company_name || raw.companyName || '',
+	};
+}
+
+/**
+ * 一次取回多租户品牌（替代首屏「每卡一次 /tenants/{slug}」）。
+ * 命中服务端 300s HTTP 缓存；浏览器侧 staleTime 6h，并把每条结果写回单租户缓存，
+ * 供逐卡回退路径复用。
+ */
+export function useTenantBrandings(slugs: string[]) {
+	const key = useMemo(() => normalizeBrandingSlugs(slugs).join(','), [slugs]);
+	return useQuery<Record<string, TenantBranding>>({
+		queryKey: ['tenant-branding-batch', key],
+		queryFn: async () => {
+			const res = await apiClient.get(BRANDING_BATCH_PATH, { params: { slugs: key } });
+			const out: Record<string, TenantBranding> = {};
+			for (const raw of extractList<RawBranding>(res.data)) {
+				const slug = raw.slug || raw.name || '';
+				if (!slug) continue;
+				const branding = mapBranding(raw);
+				out[slug] = branding;
+				writeCache(`${BRANDING_PREFIX}${slug}`, branding);
+			}
+			return out;
+		},
+		staleTime: TTL,
+		gcTime: TTL * 2,
+		enabled: key.length > 0,
+		retry: 1,
 	});
 }

@@ -1,15 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AlertCircle, Inbox, Loader2, Search, X } from 'lucide-react';
 import { getPortalUrl } from '@autional/shared';
 import { ThemeProvider, ThemeToggle, Input } from '@autional/ui';
 import { I18nProvider, useI18n } from '@/lib/i18n';
 import {
+	EMPTY_BRANDING,
 	MIN_SEARCH_CHARS,
 	useFeaturedTenants,
 	useRecentTenants,
 	useSearchTenants,
 	useSingleTenantProbe,
+	useTenantBrandings,
 	type TenantBase,
+	type TenantBranding,
 } from '@/lib/tenants';
 import { useDebouncedValue } from '@/lib/use-debounce';
 import {
@@ -141,6 +144,21 @@ function BrandPortal() {
 
 	const featuredQuery = useFeaturedTenants();
 	const featured = featuredQuery.data ?? [];
+
+	// 首屏品牌一次批量取回（featured ∪ 最近访问），替代每卡一次 /tenants/{slug}。
+	// 批量失败时 brandingFor 返回 undefined，卡片各自回退到单卡查询（不白屏）。
+	const brandingSlugs = useMemo(
+		() => [...featured.map((t) => t.slug), ...recent.map((r) => r.slug)],
+		[featured, recent],
+	);
+	const brandingQuery = useTenantBrandings(brandingSlugs);
+	const brandingFor = useCallback(
+		(tenant: TenantBase): TenantBranding | undefined => {
+			if (brandingQuery.isError) return undefined;
+			return brandingQuery.data?.[tenant.slug] ?? EMPTY_BRANDING;
+		},
+		[brandingQuery.isError, brandingQuery.data],
+	);
 
 	// 单租户条件探针：featured 已加载且 ≤1 时才拉一次全量（常规路径零额外请求）
 	const probeEnabled = !featuredQuery.isLoading && !featuredQuery.isError && featured.length <= 1;
@@ -295,6 +313,7 @@ function BrandPortal() {
 										hrefFor={hrefFor}
 										enterLabel={t('card.enter')}
 										onNavigate={recordRecent}
+										brandingFor={brandingFor}
 									/>
 								)}
 							</section>

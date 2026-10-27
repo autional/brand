@@ -2,7 +2,12 @@ import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { pickOnColor } from '@/lib/brand-color';
 import { prefetchDocument } from '@/lib/prefetch';
-import { EMPTY_BRANDING, useTenantBranding, type TenantBase } from '@/lib/tenants';
+import {
+	EMPTY_BRANDING,
+	useTenantBranding,
+	type TenantBase,
+	type TenantBranding,
+} from '@/lib/tenants';
 
 interface BrandCardProps {
 	tenant: TenantBase;
@@ -10,17 +15,20 @@ interface BrandCardProps {
 	enterLabel: string;
 	/** 点击进入时回调（导航前同步执行，用于记录最近访问；不传时行为与现状一致） */
 	onNavigate?: (tenant: TenantBase) => void;
+	/** 批量接口给出的品牌；undefined = 批量失败，退回逐卡查询 */
+	branding?: TenantBranding;
 }
 
 /** 卡片内部呈现「租户自己的」品牌（logo / primary_color）；卡片外壳仍是 Autional 品牌。 */
-export function BrandCard({ tenant, href, enterLabel, onNavigate }: BrandCardProps) {
+export function BrandCard({ tenant, href, enterLabel, onNavigate, branding }: BrandCardProps) {
 	const [logoFailed, setLogoFailed] = useState(false);
-	const { data } = useTenantBranding(tenant.slug);
-	const branding = data ?? EMPTY_BRANDING;
+	// 批量已给品牌时不发单卡请求；只有批量失败（branding === undefined）才逐卡回退。
+	const { data } = useTenantBranding(tenant.slug, { enabled: branding === undefined });
+	const resolved = branding ?? data ?? EMPTY_BRANDING;
 
-	const accent = branding.primaryColor || undefined;
+	const accent = resolved.primaryColor || undefined;
 	const initial = (tenant.displayName || tenant.slug).trim().charAt(0).toUpperCase() || '?';
-	const showLogo = Boolean(branding.logoUrl) && !logoFailed;
+	const showLogo = Boolean(resolved.logoUrl) && !logoFailed;
 
 	return (
 		<a
@@ -38,7 +46,7 @@ export function BrandCard({ tenant, href, enterLabel, onNavigate }: BrandCardPro
 				<div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border border-neutral-200 bg-white shadow-soft">
 					{showLogo ? (
 						<img
-							src={branding.logoUrl}
+							src={resolved.logoUrl}
 							alt={tenant.displayName}
 							className="h-full w-full object-contain p-1.5"
 							loading="lazy"
@@ -64,9 +72,9 @@ export function BrandCard({ tenant, href, enterLabel, onNavigate }: BrandCardPro
 					<p className="mt-0.5 truncate font-mono text-xs text-[var(--color-text-muted)] dark:text-sky-200">
 						{tenant.slug}
 					</p>
-					{branding.companyName ? (
+					{resolved.companyName ? (
 						<p className="mt-2 truncate text-sm text-[var(--color-text-muted)]">
-							{branding.companyName}
+							{resolved.companyName}
 						</p>
 					) : null}
 				</div>
