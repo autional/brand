@@ -55,5 +55,37 @@ export function readBuildEnv(env = process.env) {
   const cdnHost = (env.CDN_HOST || 'https://cdn.autional.cn').replace(/\/+$/, '');
   const siteHost = new URL(siteUrl).host;
   const rootDomain = siteHost.split('.').slice(-2).join('.');
-  return { region, siteUrl, defaultLang, fallbackLang, cdnHost, siteHost, rootDomain };
+
+  /**
+   * 前端 API 基址策略（2026-10-27）：
+   *   direct = 跨域直连 `${API_ORIGIN}/bff`（少一跳 Vercel，需服务端 CORS 放行该 origin）
+   *   proxy  = 同域 `/bff`（由 Vercel rewrite 转发，经边缘一跳）
+   * 默认 cn→direct（.cn 已有香港直连入口）、com→proxy（api.autional.com 本身就在 Vercel 边上，
+   * 直连无收益且多一次预检）。显式 `FRONTEND_API_MODE=direct|proxy` 可覆盖，用于灰度与回滚。
+   */
+  const apiMode =
+    env.FRONTEND_API_MODE === 'direct' || env.FRONTEND_API_MODE === 'proxy'
+      ? env.FRONTEND_API_MODE
+      : region === 'cn'
+        ? 'direct'
+        : 'proxy';
+  const apiOrigin = (env.API_ORIGIN || '').replace(/\/+$/, '');
+  if (apiMode === 'direct' && !apiOrigin) {
+    throw new Error(
+      '[build-env] 前端 API 模式为 direct 但缺少 API_ORIGIN（跨域直连必须有绝对源站）——' +
+        '请在 Vercel 项目设置里补齐，或设 FRONTEND_API_MODE=proxy 回退同域 rewrite。',
+    );
+  }
+
+  return {
+    region,
+    siteUrl,
+    defaultLang,
+    fallbackLang,
+    cdnHost,
+    siteHost,
+    rootDomain,
+    apiMode,
+    apiOrigin,
+  };
 }
