@@ -50,8 +50,8 @@ importers:
   apps/brand-portal:
     dependencies:
       '@autional/shared':
-        specifier: 0.1.0-rc.33
-        version: 0.1.0-rc.33(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(use-sync-external-store@1.7.0(react@19.2.5))
+        specifier: 0.1.0-rc.46
+        version: 0.1.0-rc.46(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(use-sync-external-store@1.7.0(react@19.2.5))
       '@autional/tailwind-preset':
         specifier: 0.1.0-rc.10
         version: 0.1.0-rc.10(tailwindcss@3.4.19)
@@ -59,8 +59,8 @@ importers:
         specifier: 0.1.0-rc.18
         version: 0.1.0-rc.18
       '@autional/ui':
-        specifier: 0.1.0-rc.53
-        version: 0.1.0-rc.53(@autional/tokens@0.1.0-rc.18)(i18next@26.0.10(typescript@5.8.3))(lucide-react@0.509.0(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-i18next@17.0.7(i18next@26.0.10(typescript@5.8.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.8.3))(react-router@7.15.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)
+        specifier: 0.1.0-rc.54
+        version: 0.1.0-rc.54(@autional/tokens@0.1.0-rc.18)(i18next@26.0.10(typescript@5.8.3))(lucide-react@0.509.0(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-i18next@17.0.7(i18next@26.0.10(typescript@5.8.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.8.3))(react-router@7.15.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)
       '@tanstack/react-query':
         specifier: 5.100.9
         version: 5.100.9(react@19.2.5)
@@ -174,8 +174,8 @@ packages:
       eslint: '>=9.0.0'
       typescript-eslint: '>=8.0.0'
 
-  '@autional/shared@0.1.0-rc.33':
-    resolution: {integrity: sha512-i4r5fNRsESybWkC2dQxc6thfmHxc2P5z+Jf/9C2yeCDbw8uQwg22Unjh2sfpwu9G7ESqZZrbF1JG0EE2l7ayGg==}
+  '@autional/shared@0.1.0-rc.46':
+    resolution: {integrity: sha512-ZkRbnx3dtjCZA+AYl6zPu6MbKlXA+Y3rXbZ6RM4mbEB8FXlN9k147srjLXuKrmwADCkwfM3LraNqwzHYpSEsyA==}
     peerDependencies:
       react: 19.2.5
       react-dom: 19.2.5
@@ -194,8 +194,8 @@ packages:
   '@autional/tsconfig@0.1.0-rc':
     resolution: {integrity: sha512-I/sxYpmIRekrDgRKAjdJhSq4LGcQbKgUwIGwepGj/rn8EDcTFHQu4ZDHbaS6aHyVLj1kEG8TYQnXtF8MMQ0+EA==}
 
-  '@autional/ui@0.1.0-rc.53':
-    resolution: {integrity: sha512-E/AEdt5Bljcdc1qr/N4Tx6Vy0ImxPvR2Cggu5wCPMP+yeI4zFqv8sAQMGIg6cfmy4GioXyINoTG8p22uV3qfZg==}
+  '@autional/ui@0.1.0-rc.54':
+    resolution: {integrity: sha512-cGp8H1IcbAT9WdzsYXt4aPBQQ34d0r71oB4F2OdXYFaOPOTWAwza0JMl5JRaOrMEdHIxU92EL5SrExj92UREwQ==}
     peerDependencies:
       '@autional/tokens': '>=0.1.0-rc'
       antd: '>=6.0.0'
@@ -3344,7 +3344,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@autional/shared@0.1.0-rc.33(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(use-sync-external-store@1.7.0(react@19.2.5))':
+  '@autional/shared@0.1.0-rc.46(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(use-sync-external-store@1.7.0(react@19.2.5))':
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@tanstack/react-query': 5.100.9(react@19.2.5)
@@ -3373,7 +3373,7 @@ snapshots:
 
   '@autional/tsconfig@0.1.0-rc': {}
 
-  '@autional/ui@0.1.0-rc.53(@autional/tokens@0.1.0-rc.18)(i18next@26.0.10(typescript@5.8.3))(lucide-react@0.509.0(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-i18next@17.0.7(i18next@26.0.10(typescript@5.8.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.8.3))(react-router@7.15.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)':
+  '@autional/ui@0.1.0-rc.54(@autional/tokens@0.1.0-rc.18)(i18next@26.0.10(typescript@5.8.3))(lucide-react@0.509.0(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-i18next@17.0.7(i18next@26.0.10(typescript@5.8.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.8.3))(react-router@7.15.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)':
     dependencies:
       '@autional/tokens': 0.1.0-rc.18
       i18next: 26.0.10(typescript@5.8.3)
