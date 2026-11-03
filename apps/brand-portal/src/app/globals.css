@@ -1,5 +1,8 @@
-/* 令牌与 profile 由 <head> 里的 CDN <link> 提供（单一来源）。
-   primitives **不能**同样从 CDN 加载：它内部是 Tailwind 的 @layer base / @layer components 片段，
+/* 令牌随应用打包（同源、带 hash）：2026-11-03 起不再从 CDN 运行期加载。
+   CDN 被安全策略 challenge 时 <link> 子资源无法自解 → 全站 var(--color-*) 失效。 */
+@import '@autional/tokens/tokens.css';
+
+/* primitives **不能**从 CDN 加载：它内部是 Tailwind 的 @layer base / @layer components 片段，
    而 Tailwind 处理它们时会按层**重新定位**（base 段落到 preflight 之后）。当成普通外部样式表加载时，
    整个文件都排在站点 bundle 之前，base 段落于是落到 preflight **之前**——
    preflight 的 body { line-height: inherit } 反过来盖掉 primitives 的 body { line-height: var(--line-height-body-md) }，

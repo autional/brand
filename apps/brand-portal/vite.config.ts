@@ -4,13 +4,11 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { readFileSync } from 'node:fs';
 import path from 'path';
-import { CDN_PIN, readBuildEnv } from '../../scripts/env.mjs';
-import { cdnHeadPlugin } from '../../scripts/vite-cdn.mjs';
+import { readBuildEnv } from '../../scripts/env.mjs';
 import { REGION_COPY } from '../../scripts/region-copy.mjs';
 
 const buildEnv = readBuildEnv();
 const copy = REGION_COPY[buildEnv.defaultLang];
-const CDN_ASSET_BASE = `${buildEnv.cdnHost}/ui/${CDN_PIN}`;
 const ROOT_URL = `https://www.${buildEnv.rootDomain}`;
 
 function normalizeViteBase(p: string | undefined): string {
@@ -37,7 +35,7 @@ function regionPlugin(): Plugin {
     OG_IMAGE: `${ROOT_URL}/og-default.png`,
     SITE_URL: buildEnv.siteUrl,
     ROOT_URL,
-    CDN_ASSET_BASE,
+    AUTH_ORIGIN: `https://auth.${buildEnv.rootDomain}`,
   };
   return {
     name: 'region-plugin',
@@ -90,11 +88,8 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    // 首屏预热：CDN（阻塞 CSS）+ 下一跳 auth（所有卡片都整页跳过去）
-    cdnHeadPlugin({
-      cdnHost: buildEnv.cdnHost,
-      extraOrigins: [`https://auth.${buildEnv.rootDomain}`],
-    }),
+    // 2026-11-03：CDN preconnect 已移除（图标/清单/令牌全部同源）；
+    // 只保留「下一跳 auth」的预热 —— 所有卡片都整页跳过去。
     inlineEnvPlugin(),
     regionPlugin(),
     VitePWA({
