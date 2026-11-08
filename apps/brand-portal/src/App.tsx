@@ -28,15 +28,17 @@ import { SearchResults } from '@/components/SearchResults';
 
 function LangSwitch() {
 	const { lang, setLang, t } = useI18n();
+	// i18n-exempt: 语言切换钮目标语言本名（endonym），不随当前语言翻译
+	const endonym = lang === 'zh-CN' ? 'EN' : '中文';
 	return (
 		<button
 			type="button"
 			onClick={() => setLang(lang === 'zh-CN' ? 'en-US' : 'zh-CN')}
-			aria-label={t('header.langLabel')}
+			// WCAG 2.5.3（Label in Name）：可访问名必须包含可见文本
+			aria-label={`${t('header.langLabel')} ${endonym}`}
 			className="brand-button-secondary min-h-[var(--a11y-touch-target)] shrink-0 whitespace-nowrap !px-4 !py-2 !text-xs"
 		>
-			{/* i18n-exempt: 语言切换钮目标语言本名（endonym），不随当前语言翻译 */}
-			{lang === 'zh-CN' ? 'EN' : '中文'}
+			{endonym}
 		</button>
 	);
 }
@@ -217,6 +219,8 @@ function BrandPortal() {
 							图标与清除按钮走 prefix/suffix 槽 —— 原来是 absolute 图标 + 算出来的 pl-11/pr-12。 */}
 						<Input
 							ref={inputRef}
+							id="tenant-search"
+							name="tenant-search"
 							type="search"
 							size="lg"
 							shape="pill"

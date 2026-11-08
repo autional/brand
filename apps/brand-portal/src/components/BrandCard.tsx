@@ -29,6 +29,11 @@ export function BrandCard({ tenant, href, enterLabel, onNavigate, branding }: Br
 	const accent = resolved.primaryColor || undefined;
 	const initial = (tenant.displayName || tenant.slug).trim().charAt(0).toUpperCase() || '?';
 	const showLogo = Boolean(resolved.logoUrl) && !logoFailed;
+	// WCAG 2.5.3（Label in Name）：可访问名必须包含全部**可见**文本
+	// （首字母头像 + 展示名 + slug + 公司名；aria-hidden 不影响"可见文本"判定）
+	const accessibleName = [initial, enterLabel, tenant.displayName, tenant.slug, resolved.companyName]
+		.filter(Boolean)
+		.join(' ');
 
 	return (
 		<a
@@ -36,7 +41,7 @@ export function BrandCard({ tenant, href, enterLabel, onNavigate, branding }: Br
 			onClick={() => onNavigate?.(tenant)}
 			onPointerEnter={() => prefetchDocument(href)}
 			onFocus={() => prefetchDocument(href)}
-			aria-label={`${enterLabel} ${tenant.displayName}`}
+			aria-label={accessibleName}
 			className="brand-card group relative flex flex-col overflow-hidden transition duration-200 hover:-translate-y-1 hover:border-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
 			style={accent ? ({ '--card-accent': accent } as React.CSSProperties) : undefined}
 		>
@@ -55,6 +60,7 @@ export function BrandCard({ tenant, href, enterLabel, onNavigate, branding }: Br
 					) : (
 						<span
 							className="flex h-full w-full items-center justify-center text-xl font-bold"
+							aria-hidden="true"
 							style={{
 								backgroundColor: accent || 'var(--color-primary-700)',
 								color: pickOnColor(accent || 'var(--color-primary-700)'),
