@@ -29,11 +29,6 @@ export function BrandCard({ tenant, href, enterLabel, onNavigate, branding }: Br
 	const accent = resolved.primaryColor || undefined;
 	const initial = (tenant.displayName || tenant.slug).trim().charAt(0).toUpperCase() || '?';
 	const showLogo = Boolean(resolved.logoUrl) && !logoFailed;
-	// WCAG 2.5.3（Label in Name）：可访问名必须包含全部**可见**文本
-	// （首字母头像 + 展示名 + slug + 公司名；aria-hidden 不影响"可见文本"判定）
-	const accessibleName = [initial, enterLabel, tenant.displayName, tenant.slug, resolved.companyName]
-		.filter(Boolean)
-		.join(' ');
 
 	return (
 		<a
@@ -41,7 +36,10 @@ export function BrandCard({ tenant, href, enterLabel, onNavigate, branding }: Br
 			onClick={() => onNavigate?.(tenant)}
 			onPointerEnter={() => prefetchDocument(href)}
 			onFocus={() => prefetchDocument(href)}
-			aria-label={accessibleName}
+			// WCAG 2.5.3：**不设 aria-label**，可访问名直接取自可见内容（首字母头像 aria-hidden 后
+			// 由展示名 + slug + 公司名组成）。手写 aria-label 与多段可见文本的拼接顺序/分隔很难对齐，
+			// 任何多余前缀都会让"可见文本"不再是可访问名的连续子串（实测 Lighthouse 恒红）。
+			title={enterLabel}
 			className="brand-card group relative flex flex-col overflow-hidden transition duration-200 hover:-translate-y-1 hover:border-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
 			style={accent ? ({ '--card-accent': accent } as React.CSSProperties) : undefined}
 		>

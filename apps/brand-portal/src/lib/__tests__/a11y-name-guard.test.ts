@@ -17,9 +17,9 @@ describe('可访问名回归锁（WCAG 2.5.3）', () => {
 		expect(app).toContain("aria-label={`${t('header.langLabel')} ${endonym}`}");
 	});
 
-	it('品牌卡：可访问名包含首字母 / 展示名 / slug / 公司名', () => {
-		expect(card).toContain('[initial, enterLabel, tenant.displayName, tenant.slug, resolved.companyName]');
-		expect(card).toContain('aria-label={accessibleName}');
+	it('品牌卡：不手写 aria-label（可访问名取自可见内容）', () => {
+		expect(card).not.toContain('aria-label={accessibleName}');
+		expect(card).not.toContain('aria-label={`');
 	});
 
 	it('首字母头像为装饰性内容（不参与朗读）', () => {
