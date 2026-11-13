@@ -1,0 +1,45 @@
+name: CI
+
+# 整条流水线（原 a11y.yml 已并入本文件，不再保留两套 job）。
+# 无障碍闸门（AC C-28 / ui-denominator U4）：jsx-a11y recommended，0 error/warn 才算过。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 不指定 version：package.json 的 packageManager(pnpm@11.0.8) 是唯一真源。
+      # 两处都写会触发 action 报错「Multiple versions of pnpm specified」。
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Lint
+        run: pnpm lint
+
+      # 生产构建需要部署环境变量（REGION / SITE_URL / CDN_HOST，VERCEL_ENV=production 时缺失即
+      # fail-closed，见 scripts/env.mjs），那是发布链路的职责；这里只做类型检查，不在 CI 里伪造部署环境。
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: A11y lint
+        run: pnpm --filter @autional/brand-portal run lint:a11y
