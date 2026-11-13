@@ -44,7 +44,8 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 		return () => {
 			i18n.off('languageChanged', onLanguageChanged);
 		};
-	}, []);
+		// i18n 实例来自 i18n context / 全局实例，跨渲染引用稳定；补依赖不改执行时机（仍只跑一次）。
+	}, [i18n]);
 
 	return <>{children}</>;
 }

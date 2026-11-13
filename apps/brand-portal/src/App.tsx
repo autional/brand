@@ -145,7 +145,9 @@ function BrandPortal() {
 	const { recent, recordRecent } = useRecentTenants();
 
 	const featuredQuery = useFeaturedTenants();
-	const featured = featuredQuery.data ?? [];
+	// 用 useMemo 固定空数组引用：否则 data 未就绪时每次渲染都是新数组，
+	// 会击穿下方 brandingSlugs 的 memo 并让依赖它的 effect 反复触发。
+	const featured = useMemo(() => featuredQuery.data ?? [], [featuredQuery.data]);
 
 	// 首屏品牌一次批量取回（featured ∪ 最近访问），替代每卡一次 /tenants/{slug}。
 	// 批量失败时 brandingFor 返回 undefined，卡片各自回退到单卡查询（不白屏）。
@@ -165,7 +167,8 @@ function BrandPortal() {
 	// 单租户条件探针：featured 已加载且 ≤1 时才拉一次全量（常规路径零额外请求）
 	const probeEnabled = !featuredQuery.isLoading && !featuredQuery.isError && featured.length <= 1;
 	const probeQuery = useSingleTenantProbe(probeEnabled);
-	const probeTenants = probeQuery.data ?? [];
+	// 同上：稳定空数组引用，避免自动跳过 effect 的依赖每帧变化。
+	const probeTenants = useMemo(() => probeQuery.data ?? [], [probeQuery.data]);
 
 	// 单租户自动跳过（与 auth 侧 SelectTenantPage 同口径）
 	useEffect(() => {
